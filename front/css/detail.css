@@ -1,0 +1,25 @@
+.btn{
+    width: 298px;
+    height: 52px;
+    line-height: 52px;
+    font-size: 16px;
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+}
+.btn-disabled {
+    background: #e0e0e0!important;
+    border-color: #e0e0e0!important;
+    color: #b0b0b0!important;
+    cursor: default!important;
+}
+.price {
+    color: #ff6700;
+    font-size: 24px;
+    padding-top: 20px;
+}
+.title{
+    font-size: 24px;
+    font-weight: 400;
+    color: #212121;
+}
