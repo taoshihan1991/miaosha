@@ -1,4 +1,4 @@
-$.leftTime("2021-01-01 00:00:00",function(d){
+$.leftTime(countTime,function(d){
     if(d.status){
         var $dateShow1=$(".count-time");
         $dateShow1.find(".d").html(d.d);
