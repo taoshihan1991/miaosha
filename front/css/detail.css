@@ -23,3 +23,20 @@
     font-weight: 400;
     color: #212121;
 }
+.count-time{
+    margin: 10px 0;
+}
+.time-item{
+    display: inline-block;
+    font-size: 18px;
+    width: 36px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    color: #fff;
+    border-radius: 5px;
+    background: #000;
+}
+.time-item.s{
+    background: #f00;
+}
