@@ -45,12 +45,13 @@ func run() {
 	baseServer := "0.0.0.0:" + port
 	log.Println("start api server...\r\nurl：http://" + baseServer)
 	engine := gin.Default()
-
+	engine.Static("/static", "./front/static")
 	//性能监控
 	pprof.Register(engine)
 	initRouter(engine)
 	engine.Run(baseServer)
 }
 func initRouter(engine *gin.Engine) {
+	engine.GET("/", controller.PageIndex)
 	engine.GET("/product", controller.GetProduct)
 }
