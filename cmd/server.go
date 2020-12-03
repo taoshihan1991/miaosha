@@ -18,7 +18,7 @@ var (
 )
 var serverCmd = &cobra.Command{
 	Use:     "server",
-	Short:   "example:miaosha server port 8081",
+	Short:   "example:miaosha server port 8082",
 	Example: "go-fly server -c config/",
 	Run: func(cmd *cobra.Command, args []string) {
 		run()
@@ -26,7 +26,7 @@ var serverCmd = &cobra.Command{
 }
 
 func init() {
-	serverCmd.PersistentFlags().StringVarP(&port, "port", "p", "8081", "监听端口号")
+	serverCmd.PersistentFlags().StringVarP(&port, "port", "p", "8082", "监听端口号")
 	serverCmd.PersistentFlags().BoolVarP(&daemon, "daemon", "d", false, "是否为守护进程模式")
 }
 func run() {
