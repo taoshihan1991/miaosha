@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"github.com/taoshihan1991/miaosha/controller"
+	"github.com/taoshihan1991/miaosha/setting"
 	"log"
 	"os"
 	"os/exec"
@@ -49,6 +50,10 @@ func run() {
 	//性能监控
 	pprof.Register(engine)
 	initRouter(engine)
+	//配置文件
+	setting.GetConfigIni("config.ini")
+	setting.GetRedisConfig()
+
 	engine.Run(baseServer)
 }
 func initRouter(engine *gin.Engine) {
