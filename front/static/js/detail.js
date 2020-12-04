@@ -68,6 +68,20 @@ $(function () {
             type: "GET",
             url: api+"/buy?id=1",
             success: function(res) {
+                if(res.code==200){
+                    url=res.data.url;
+                    $.ajax({
+                        type: "GET",
+                        url: api+url,
+                        success: function(res) {
+                            if(res.code==200){
+                                alert("success");
+                            }else{
+                                alert("failed");
+                            }
+                        }
+                    });
+                }
             }
         });
     });

@@ -51,3 +51,9 @@ func HashSetV3(key string, values ...interface{}) {
 		log.Println(err.Error())
 	}
 }
+func DelKey(key string) {
+	_, err := rdb.Del(ctx, key).Result()
+	if err != nil {
+		log.Println(err.Error())
+	}
+}

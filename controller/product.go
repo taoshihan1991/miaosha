@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/taoshihan1991/miaosha/redis"
+	"github.com/taoshihan1991/miaosha/utils"
 	"io"
 	"strconv"
 	"time"
@@ -52,4 +53,15 @@ func GetKillUrl(c *gin.Context) {
 		})
 		return
 	}
+	urlPath := fmt.Sprintf("product:%s,%d", id, time.Now().UnixNano())
+	token := utils.Md5(urlPath)
+	redis.SetStr(token, 1, time.Second*10)
+	url := "/seckill/" + token
+	c.JSON(200, gin.H{
+		"code": 200,
+		"msg":  "success",
+		"data": gin.H{
+			"url": url,
+		},
+	})
 }
