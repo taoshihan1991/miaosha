@@ -59,4 +59,6 @@ func run() {
 func initRouter(engine *gin.Engine) {
 	engine.GET("/", controller.PageIndex)
 	engine.GET("/product", controller.GetProduct)
+	engine.GET("/buy", controller.GetKillUrl)
+	engine.GET("/timestamp", controller.GetTimestamp)
 }

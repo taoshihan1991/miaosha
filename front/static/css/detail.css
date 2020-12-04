@@ -13,6 +13,12 @@
     color: #b0b0b0!important;
     cursor: default!important;
 }
+.btn-primary {
+    background: #ff6700;
+    border-color: #ff6700;
+    color: #fff;
+    cursor: pointer!important;
+}
 .price {
     color: #ff6700;
     font-size: 24px;

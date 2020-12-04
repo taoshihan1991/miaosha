@@ -5,6 +5,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/taoshihan1991/miaosha/setting"
 	"log"
+	"time"
 )
 
 var rdb *redis.Client
@@ -25,6 +26,14 @@ func GetStr(key string) string {
 	}
 	return str
 }
+func SetStr(key string, value interface{}, expire time.Duration) string {
+	str, err := rdb.Set(ctx, key, value, expire).Result()
+	if err != nil {
+		log.Println(err.Error())
+		return ""
+	}
+	return str
+}
 func HashGet(key string) map[string]string {
 	res, err := rdb.HGetAll(ctx, key).Result()
 	if err != nil {
@@ -32,4 +41,13 @@ func HashGet(key string) map[string]string {
 		return make(map[string]string)
 	}
 	return res
+}
+func HashSetV4(key string, values ...interface{}) {
+	rdb.HSet(ctx, key, values)
+}
+func HashSetV3(key string, values ...interface{}) {
+	_, err := rdb.HMSet(ctx, key, values).Result()
+	if err != nil {
+		log.Println(err.Error())
+	}
 }
