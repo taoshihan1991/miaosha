@@ -77,10 +77,12 @@ $(function () {
                             if(res.code==200){
                                 alert("success");
                             }else{
-                                alert("failed");
+                                alert(res.msg);
                             }
                         }
                     });
+                }else{
+                    alert(res.msg);
                 }
             }
         });

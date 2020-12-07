@@ -57,3 +57,28 @@ func DelKey(key string) {
 		log.Println(err.Error())
 	}
 }
+func HashInc(key string, field string, inc int64) {
+	_, err := rdb.HIncrBy(ctx, key, field, inc).Result()
+	if err != nil {
+		log.Println(err.Error())
+	}
+}
+func SortedSetAdd(key string, member interface{}, score float64) {
+	z := &redis.Z{
+		Score:  score,
+		Member: member,
+	}
+	_, err := rdb.ZAdd(ctx, key, z).Result()
+	if err != nil {
+		log.Println(err.Error())
+	}
+}
+func SortedSetList(key string, start int64, stop int64) []string {
+	list, err := rdb.ZRange(ctx, key, start, stop).Result()
+	log.Println(list, err)
+	if err != nil {
+		log.Println(err.Error())
+		return []string{}
+	}
+	return list
+}

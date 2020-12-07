@@ -19,8 +19,8 @@ func PostSale(c *gin.Context) {
 		return
 	}
 	redis.NewRedis()
-	token := redis.GetStr(p.Token)
-	if token == "" {
+	id := redis.GetStr(p.Token)
+	if id == "" {
 		c.JSON(200, gin.H{
 			"code": 400,
 			"msg":  "error token expire",
@@ -28,6 +28,9 @@ func PostSale(c *gin.Context) {
 		return
 	}
 	redis.DelKey(p.Token)
+	redis.DecProductStorge(id)
+
+	redis.InsertOrder("taoshihan", id)
 	c.JSON(200, gin.H{
 		"code": 200,
 		"msg":  "success",
