@@ -6,6 +6,7 @@ import (
 )
 
 func GetOrders(c *gin.Context) {
+	redis.NewRedis()
 	list := redis.GetOrders()
 	c.JSON(200, gin.H{
 		"code": 200,

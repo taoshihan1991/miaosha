@@ -25,7 +25,13 @@ func InsertOrder(user string, productId string) {
 	}
 	SortedSetAdd("orders", string(msg), float64(time.Now().Unix()))
 }
-func GetOrders() []string {
+func GetOrders() []*Order {
 	list := SortedSetList("orders", 0, 10)
-	return list
+	rows := make([]*Order, 0)
+	for _, r := range list {
+		order := &Order{}
+		json.Unmarshal([]byte(r), order)
+		rows = append(rows, order)
+	}
+	return rows
 }

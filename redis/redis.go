@@ -5,11 +5,13 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/taoshihan1991/miaosha/setting"
 	"log"
+	"sync"
 	"time"
 )
 
 var rdb *redis.Client
 var ctx = context.Background()
+var mutex sync.Mutex
 
 func NewRedis() {
 	rdb = redis.NewClient(&redis.Options{
@@ -74,11 +76,30 @@ func SortedSetAdd(key string, member interface{}, score float64) {
 	}
 }
 func SortedSetList(key string, start int64, stop int64) []string {
-	list, err := rdb.ZRange(ctx, key, start, stop).Result()
-	log.Println(list, err)
+	res := rdb.ZRange(ctx, key, start, stop)
+	log.Println(res)
+
+	list, err := res.Result()
 	if err != nil {
 		log.Println(err.Error())
 		return []string{}
 	}
 	return list
+}
+func Lock(key string) bool {
+	mutex.Lock()
+	defer mutex.Unlock()
+	bool, err := rdb.SetNX(ctx, key, 1, 10*time.Second).Result()
+	if err != nil {
+		log.Println(err.Error())
+	}
+	return bool
+}
+func UnLock(key string) int64 {
+	nums, err := rdb.Del(ctx, key).Result()
+	if err != nil {
+		log.Println(err.Error())
+		return 0
+	}
+	return nums
 }

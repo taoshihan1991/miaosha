@@ -28,9 +28,12 @@ func PostSale(c *gin.Context) {
 		return
 	}
 	redis.DelKey(p.Token)
-	redis.DecProductStorge(id)
 
+	redis.Lock("order_lock")
+	redis.DecProductStorge(id)
 	redis.InsertOrder("taoshihan", id)
+	redis.UnLock("order_lock")
+
 	c.JSON(200, gin.H{
 		"code": 200,
 		"msg":  "success",

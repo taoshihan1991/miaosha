@@ -64,6 +64,8 @@ $(function () {
         }, 1000)
     }
     $(".buyBtn").on("click"," .btn-primary",function () {
+        $(".buyBtn a").removeClass("btn-primary");
+        $(".buyBtn a").addClass("btn-disabled");
         $.ajax({
             type: "GET",
             url: api+"/buy?id=1",
@@ -74,6 +76,8 @@ $(function () {
                         type: "GET",
                         url: api+url,
                         success: function(res) {
+                            $(".buyBtn a").removeClass("btn-disabled");
+                            $(".buyBtn a").addClass("btn-primary");
                             if(res.code==200){
                                 alert("success");
                             }else{

@@ -1,12 +1,11 @@
 package controller
 
 import (
-	"crypto/md5"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/taoshihan1991/miaosha/redis"
 	"github.com/taoshihan1991/miaosha/utils"
-	"io"
+	"log"
 	"strconv"
 	"time"
 )
@@ -15,18 +14,19 @@ func GetProduct(c *gin.Context) {
 	id := c.Query("id")
 	redis.NewRedis()
 
-	h := md5.New()
-	io.WriteString(h, fmt.Sprintf("product:%s,%d", id, time.Now().UnixNano()))
-	token := string(h.Sum(nil))
-	//redis.SetStr(token, 1, time.Hour*24)
-	redis.SetProduct(id)
-
+	info := redis.ProductInfo(id)
+	now := time.Now().UnixNano() / 1e6
+	log.Println(info["saletime"], now)
+	saleTime, err := strconv.Atoi(info["saletime"])
+	if err != nil || int64(saleTime) < now {
+		redis.SetProduct(id)
+		info = redis.ProductInfo(id)
+	}
 	c.JSON(200, gin.H{
 		"code": 200,
 		"msg":  "success",
 		"data": gin.H{
-			"token":   token,
-			"product": redis.ProductInfo(id),
+			"product": info,
 		},
 	})
 }
