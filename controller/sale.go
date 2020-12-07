@@ -30,8 +30,10 @@ func PostSale(c *gin.Context) {
 	redis.DelKey(p.Token)
 
 	redis.Lock("order_lock")
-	redis.DecProductStorge(id)
-	redis.InsertOrder("taoshihan", id)
+	storge := redis.DecProductStorge(id)
+	if storge >= 0 {
+		redis.InsertOrder("taoshihan", id)
+	}
 	redis.UnLock("order_lock")
 
 	c.JSON(200, gin.H{

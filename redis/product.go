@@ -14,8 +14,8 @@ func SetProduct(id string) {
 	saleTime := fmt.Sprintf("%d", time.Now().UnixNano()/1e6+1000*20)
 	HashSetV3(key, "title", "小米100高贵尊享版", "price", "1", "saletime", saleTime, "storge", 5)
 }
-func DecProductStorge(id string) {
+func DecProductStorge(id string) int64 {
 	key := "product:" + id
-	HashInc(key, "storge", -1)
-
+	inc := HashInc(key, "storge", -1)
+	return inc
 }

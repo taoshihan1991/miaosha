@@ -5,7 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/taoshihan1991/miaosha/redis"
 	"github.com/taoshihan1991/miaosha/utils"
-	"log"
 	"strconv"
 	"time"
 )
@@ -16,7 +15,7 @@ func GetProduct(c *gin.Context) {
 
 	info := redis.ProductInfo(id)
 	now := time.Now().UnixNano() / 1e6
-	log.Println(info["saletime"], now)
+	//log.Println(info["saletime"], now)
 	saleTime, err := strconv.Atoi(info["saletime"])
 	if err != nil || int64(saleTime) < now {
 		redis.SetProduct(id)

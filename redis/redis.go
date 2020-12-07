@@ -59,11 +59,13 @@ func DelKey(key string) {
 		log.Println(err.Error())
 	}
 }
-func HashInc(key string, field string, inc int64) {
-	_, err := rdb.HIncrBy(ctx, key, field, inc).Result()
+func HashInc(key string, field string, inc int64) int64 {
+	res, err := rdb.HIncrBy(ctx, key, field, inc).Result()
 	if err != nil {
 		log.Println(err.Error())
+		return -1
 	}
+	return res
 }
 func SortedSetAdd(key string, member interface{}, score float64) {
 	z := &redis.Z{
