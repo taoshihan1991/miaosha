@@ -19,6 +19,7 @@ func GetProduct(c *gin.Context) {
 	saleTime, err := strconv.ParseInt(info["saletime"], 10, 64)
 	if err != nil || saleTime < now {
 		redis.SetProduct(id)
+		redis.OrderDel()
 		info = redis.ProductInfo(id)
 	}
 	c.JSON(200, gin.H{
@@ -67,7 +68,7 @@ func GetKillUrl(c *gin.Context) {
 	urlPath := fmt.Sprintf("product:%s,%d", id, time.Now().UnixNano())
 	token := utils.Md5(urlPath)
 	redis.SetStr(token, id, time.Second*10)
-	url := "/seckill/" + token
+	url := "seckill/" + token
 	c.JSON(200, gin.H{
 		"code": 200,
 		"msg":  "success",

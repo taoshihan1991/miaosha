@@ -26,8 +26,8 @@ func InsertOrder(user string, productId string) {
 	SortedSetAdd("orders", string(msg), float64(time.Now().Unix()))
 	SetOrderDetail(productId, user, order.Time)
 }
-func GetOrders() []*Order {
-	list := SortedSetList("orders", 0, 10)
+func GetOrders(start int64, stop int64) []*Order {
+	list := SortedSetList("orders", start, stop)
 	rows := make([]*Order, 0)
 	for _, r := range list {
 		order := &Order{}
@@ -47,4 +47,15 @@ func OrderInfo(user string) map[string]string {
 func OrderExist(user string) bool {
 	key := "order_detail:" + user
 	return HashExist(key, "ordertime")
+}
+func OrderDel() {
+	key := "orders"
+	itemKey := "order_detail:"
+	list := SortedSetList(key, 0, -1)
+	for _, r := range list {
+		order := &Order{}
+		json.Unmarshal([]byte(r), order)
+		DelKey(itemKey + order.User)
+	}
+	DelKey(key)
 }

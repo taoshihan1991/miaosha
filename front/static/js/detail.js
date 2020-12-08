@@ -4,7 +4,7 @@
 $(function () {
     $.ajax({
         type: "GET",
-        url: api+"/product?id=1",
+        url: api+"product?id=1",
         success: function(res) {
             var product=res.data.product;
             $("#title").html(product.title);
@@ -69,7 +69,7 @@ $(function () {
         $(".buyBtn a").addClass("btn-disabled");
         $.ajax({
             type: "GET",
-            url: api+"/buy?id=1&session="+localStorage.getItem("session"),
+            url: api+"buy?id=1&session="+localStorage.getItem("session"),
             success: function(res) {
                 if(res.code==200){
                     url=res.data.url;
@@ -94,14 +94,14 @@ $(function () {
     });
     $.ajax({
         type: "GET",
-        url: api+"/userinfo?session="+localStorage.getItem("session"),
+        url: api+"userinfo?session="+localStorage.getItem("session"),
         success: function(res) {
             if(res.code!=200){
                 var name=prompt(res.msg);
                 if(name!=null&&name!=""){
                     $.ajax({
                         type: "POST",
-                        url: api + "/userinfo",
+                        url: api + "userinfo",
                         data: {name:name},
                         success: function (res) {
                             if(res.code==200){
