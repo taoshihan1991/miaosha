@@ -3,6 +3,9 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/taoshihan1991/miaosha/redis"
+	"strconv"
+	"strings"
+	"time"
 )
 
 type Product struct {
@@ -28,16 +31,44 @@ func PostSale(c *gin.Context) {
 		return
 	}
 	redis.DelKey(p.Token)
-
-	redis.Lock("order_lock")
-	storge := redis.DecProductStorge(id)
-	if storge >= 0 {
-		redis.InsertOrder("taoshihan", id)
+	//库存
+	product := redis.ProductInfo(id)
+	storge, _ := strconv.Atoi(product["storge"])
+	if storge <= 0 {
+		c.JSON(200, gin.H{
+			"code": 400,
+			"msg":  "error Out of stock",
+		})
+		return
 	}
-	redis.UnLock("order_lock")
+	redis.PushRequestQueue("taoshihan:" + id)
 
 	c.JSON(200, gin.H{
 		"code": 200,
-		"msg":  "success",
+		"msg":  "success in queue",
 	})
+}
+func GetProductQueueToOrder() {
+	redis.NewRedis()
+	for {
+		item := redis.PopRequestQueue()
+		if item != "" {
+			redis.Lock("order_lock")
+			itemSlice := strings.Split(item, ":")
+			id := itemSlice[1]
+			user := itemSlice[0]
+			if id != "" && user != "" {
+				if !redis.OrderExist(user) {
+					storge := redis.DecProductStorge(id)
+					if storge >= 0 {
+						redis.InsertOrder(user, id)
+					}
+				}
+			}
+			redis.UnLock("order_lock")
+		} else {
+			time.Sleep(1 * time.Second)
+		}
+	}
+
 }

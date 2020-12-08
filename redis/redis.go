@@ -44,6 +44,13 @@ func HashGet(key string) map[string]string {
 	}
 	return res
 }
+func HashExist(key string, field string) bool {
+	bool, err := rdb.HExists(ctx, key, field).Result()
+	if err != nil {
+		log.Println(err.Error())
+	}
+	return bool
+}
 func HashSetV4(key string, values ...interface{}) {
 	rdb.HSet(ctx, key, values)
 }
@@ -104,4 +111,26 @@ func UnLock(key string) int64 {
 		return 0
 	}
 	return nums
+}
+func ListPush(key string, value interface{}) {
+	_, err := rdb.LPush(ctx, key, value).Result()
+	if err != nil {
+		log.Println(err.Error())
+	}
+}
+func ListPop(key string) string {
+	res, err := rdb.RPop(ctx, key).Result()
+	if err != nil {
+		log.Println(err.Error())
+		return ""
+	}
+	return res
+}
+func ListLen(key string) int64 {
+	res, err := rdb.LLen(ctx, key).Result()
+	if err != nil {
+		log.Println(err.Error())
+		return -1
+	}
+	return res
 }

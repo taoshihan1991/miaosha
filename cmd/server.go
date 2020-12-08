@@ -47,12 +47,15 @@ func run() {
 	log.Println("start api server...\r\nurl：http://" + baseServer)
 	engine := gin.Default()
 	engine.Static("/static", "./front/static")
-	//性能监控
-	pprof.Register(engine)
-	initRouter(engine)
+
 	//配置文件
 	setting.GetConfigIni("config.ini")
 	setting.GetRedisConfig()
+
+	//性能监控
+	pprof.Register(engine)
+	initRouter(engine)
+	initBackendService()
 
 	engine.Run(baseServer)
 }
@@ -63,4 +66,7 @@ func initRouter(engine *gin.Engine) {
 	engine.GET("/timestamp", controller.GetTimestamp)
 	engine.GET("/orders", controller.GetOrders)
 	engine.GET("/seckill/:token", controller.PostSale)
+}
+func initBackendService() {
+	go controller.GetProductQueueToOrder()
 }

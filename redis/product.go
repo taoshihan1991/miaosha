@@ -19,3 +19,15 @@ func DecProductStorge(id string) int64 {
 	inc := HashInc(key, "storge", -1)
 	return inc
 }
+func PushRequestQueue(item string) {
+	key := "product_request_queue"
+	ListPush(key, item)
+}
+func PopRequestQueue() string {
+	key := "product_request_queue"
+	return ListPop(key)
+}
+func LenRequestQueue() int64 {
+	key := "product_request_queue"
+	return ListLen(key)
+}

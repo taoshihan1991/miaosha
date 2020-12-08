@@ -9,6 +9,7 @@ $(function () {
             var product=res.data.product;
             $("#title").html(product.title);
             $("#price").html(product.price);
+            $("#storge").html(product.storge);
             if (typeof product.saletime=="undefined" || product.saletime==""){
                 buytime=nowTimestamp+3600*24*1000;
             }else{
@@ -79,7 +80,7 @@ $(function () {
                             $(".buyBtn a").removeClass("btn-disabled");
                             $(".buyBtn a").addClass("btn-primary");
                             if(res.code==200){
-                                alert("success");
+                                alert(res.msg);
                             }else{
                                 alert(res.msg);
                             }
