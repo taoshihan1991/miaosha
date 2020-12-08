@@ -16,8 +16,8 @@ func GetProduct(c *gin.Context) {
 	info := redis.ProductInfo(id)
 	now := time.Now().UnixNano() / 1e6
 	//log.Println(info["saletime"], now)
-	saleTime, err := strconv.Atoi(info["saletime"])
-	if err != nil || int64(saleTime) < now {
+	saleTime, err := strconv.ParseInt(info["saletime"], 10, 64)
+	if err != nil || saleTime < now {
 		redis.SetProduct(id)
 		info = redis.ProductInfo(id)
 	}

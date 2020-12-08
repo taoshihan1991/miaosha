@@ -1,1 +1,1 @@
-var api="http://127.0.0.1:8082";
+var api="http://miaosha.sopans.com";
