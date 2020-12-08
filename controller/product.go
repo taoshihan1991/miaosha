@@ -31,8 +31,19 @@ func GetProduct(c *gin.Context) {
 }
 func GetKillUrl(c *gin.Context) {
 	id := c.Query("id")
-	redis.NewRedis()
 
+	redis.NewRedis()
+	user, bool := checkUserLogin(c)
+	if !bool {
+		return
+	}
+	if redis.OrderExist(user) {
+		c.JSON(200, gin.H{
+			"code": 400,
+			"msg":  "error Order exist",
+		})
+		return
+	}
 	product := redis.ProductInfo(id)
 	saletime, _ := strconv.Atoi(product["saletime"])
 	nowTime := time.Now().UnixNano() / 1e6

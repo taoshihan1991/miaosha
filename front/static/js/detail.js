@@ -69,13 +69,13 @@ $(function () {
         $(".buyBtn a").addClass("btn-disabled");
         $.ajax({
             type: "GET",
-            url: api+"/buy?id=1",
+            url: api+"/buy?id=1&session="+localStorage.getItem("session"),
             success: function(res) {
                 if(res.code==200){
                     url=res.data.url;
                     $.ajax({
                         type: "GET",
-                        url: api+url,
+                        url: api+url+"?session="+localStorage.getItem("session"),
                         success: function(res) {
                             $(".buyBtn a").removeClass("btn-disabled");
                             $(".buyBtn a").addClass("btn-primary");
@@ -91,5 +91,31 @@ $(function () {
                 }
             }
         });
+    });
+    $.ajax({
+        type: "GET",
+        url: api+"/userinfo?session="+localStorage.getItem("session"),
+        success: function(res) {
+            if(res.code!=200){
+                var name=prompt(res.msg);
+                if(name!=null&&name!=""){
+                    $.ajax({
+                        type: "POST",
+                        url: api + "/userinfo",
+                        data: {name:name},
+                        success: function (res) {
+                            if(res.code==200){
+                                localStorage.setItem("session", res.data);
+                            }else{
+                                alert(res.msg);
+                            }
+                        }
+                    });
+                }else{
+                    alert("not null")
+                    window.location.reload();
+                }
+            }
+        }
     });
 })

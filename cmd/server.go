@@ -65,6 +65,8 @@ func initRouter(engine *gin.Engine) {
 	engine.GET("/buy", controller.GetKillUrl)
 	engine.GET("/timestamp", controller.GetTimestamp)
 	engine.GET("/orders", controller.GetOrders)
+	engine.GET("/userinfo", controller.GetUserInfo)
+	engine.POST("/userinfo", controller.PostUserInfo)
 	engine.GET("/seckill/:token", controller.PostSale)
 }
 func initBackendService() {

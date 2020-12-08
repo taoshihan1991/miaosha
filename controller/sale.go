@@ -22,6 +22,10 @@ func PostSale(c *gin.Context) {
 		return
 	}
 	redis.NewRedis()
+	username, bool := checkUserLogin(c)
+	if !bool {
+		return
+	}
 	id := redis.GetStr(p.Token)
 	if id == "" {
 		c.JSON(200, gin.H{
@@ -41,7 +45,14 @@ func PostSale(c *gin.Context) {
 		})
 		return
 	}
-	redis.PushRequestQueue("taoshihan:" + id)
+	if redis.OrderExist(username) {
+		c.JSON(200, gin.H{
+			"code": 400,
+			"msg":  "error Order exist",
+		})
+		return
+	}
+	redis.PushRequestQueue(username + ":" + id)
 
 	c.JSON(200, gin.H{
 		"code": 200,
