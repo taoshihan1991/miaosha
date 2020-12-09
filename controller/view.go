@@ -9,4 +9,5 @@ func PageIndex(c *gin.Context) {
 	if c.Request.RequestURI == "/favicon.ico" {
 		return
 	}
+	c.Redirect(301, "/static/")
 }
