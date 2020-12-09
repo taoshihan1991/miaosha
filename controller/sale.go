@@ -64,11 +64,12 @@ func GetProductQueueToOrder() {
 	for {
 		item := redis.PopRequestQueue()
 		if item != "" {
-			redis.Lock("order_lock")
+			locBool := redis.Lock("order_lock")
+
 			itemSlice := strings.Split(item, ":")
 			id := itemSlice[1]
 			user := itemSlice[0]
-			if id != "" && user != "" {
+			if id != "" && user != "" && locBool {
 				if !redis.OrderExist(user) {
 					storge := redis.DecProductStorge(id)
 					if storge >= 0 {
@@ -80,6 +81,7 @@ func GetProductQueueToOrder() {
 		} else {
 			time.Sleep(1 * time.Second)
 		}
+
 	}
 
 }

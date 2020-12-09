@@ -42,7 +42,7 @@ func SetOrderDetail(pid string, user string, time string) {
 }
 func OrderInfo(user string) map[string]string {
 	key := "order_detail:" + user
-	return HashGet(key)
+	return HashGetAll(key)
 }
 func OrderExist(user string) bool {
 	key := "order_detail:" + user

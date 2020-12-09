@@ -30,6 +30,9 @@ func GetProduct(c *gin.Context) {
 		},
 	})
 }
+func PostProduct(c *gin.Context) {
+
+}
 func GetKillUrl(c *gin.Context) {
 	id := c.Query("id")
 
@@ -46,10 +49,10 @@ func GetKillUrl(c *gin.Context) {
 		return
 	}
 	product := redis.ProductInfo(id)
-	saletime, _ := strconv.Atoi(product["saletime"])
+	saletime, _ := strconv.ParseInt(product["saletime"], 10, 64)
 	nowTime := time.Now().UnixNano() / 1e6
 	//时间
-	if nowTime < int64(saletime) {
+	if nowTime < saletime {
 		c.JSON(200, gin.H{
 			"code": 400,
 			"msg":  "error Not started yet",

@@ -36,7 +36,15 @@ func SetStr(key string, value interface{}, expire time.Duration) string {
 	}
 	return str
 }
-func HashGet(key string) map[string]string {
+func HashGet(key string, field string) string {
+	str, err := rdb.HGet(ctx, key, field).Result()
+	if err != nil {
+		log.Println(err.Error())
+		return ""
+	}
+	return str
+}
+func HashGetAll(key string) map[string]string {
 	res, err := rdb.HGetAll(ctx, key).Result()
 	if err != nil {
 		log.Println(err.Error())
@@ -51,20 +59,19 @@ func HashExist(key string, field string) bool {
 	}
 	return bool
 }
-func HashSetV4(key string, values ...interface{}) {
-	rdb.HSet(ctx, key, values)
-}
-func HashSetV3(key string, values ...interface{}) {
-	_, err := rdb.HMSet(ctx, key, values).Result()
+func HashSetV4(key string, values ...interface{}) (int64, error) {
+	num, err := rdb.HSet(ctx, key, values).Result()
 	if err != nil {
 		log.Println(err.Error())
 	}
+	return num, err
 }
-func DelKey(key string) {
-	_, err := rdb.Del(ctx, key).Result()
+func HashSetV3(key string, values ...interface{}) (bool, error) {
+	res, err := rdb.HMSet(ctx, key, values).Result()
 	if err != nil {
 		log.Println(err.Error())
 	}
+	return res, err
 }
 func HashInc(key string, field string, inc int64) int64 {
 	res, err := rdb.HIncrBy(ctx, key, field, inc).Result()
@@ -133,4 +140,10 @@ func ListLen(key string) int64 {
 		return -1
 	}
 	return res
+}
+func DelKey(key string) {
+	_, err := rdb.Del(ctx, key).Result()
+	if err != nil {
+		log.Println(err.Error())
+	}
 }
