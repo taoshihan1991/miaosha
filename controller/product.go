@@ -10,6 +10,10 @@ import (
 )
 
 func GetProduct(c *gin.Context) {
+	if !limitIpFreq(c, 10, 2) {
+		return
+	}
+
 	id := c.Query("id")
 	redis.NewRedis()
 
